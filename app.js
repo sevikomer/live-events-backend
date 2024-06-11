@@ -4,8 +4,9 @@ const mongoose = require('mongoose');
 const path = require('path');
 const eventRoutes = require('./routes/event');
 const userRoutes = require('./routes/user');
+const venueRoutes = require('./routes/venue');
 
-mongoose.connect('mongodb+srv://omersevik:Franceturquie-1@backend.ksoh2eg.mongodb.net/?retryWrites=true&w=majority&appName=backend',
+mongoose.connect('mongodb://127.0.0.1:27017/live-events',
     {
         useNewUrlParser: true,
         useUnifiedTopology: true
@@ -27,5 +28,6 @@ app.use(bodyParser.json());
 app.use('/images', express.static(path.join(__dirname, 'images')));
 app.use('/api/event', eventRoutes);
 app.use('/api/auth', userRoutes);
+app.use('/api/venue', venueRoutes);
 
 module.exports = app;
