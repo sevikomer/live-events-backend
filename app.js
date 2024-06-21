@@ -33,14 +33,21 @@ app.use('/api/event', eventRoutes);
 // app.use('/api/auth', userRoutes);
 app.use('/api/venue', venueRoutes);
 
-// index page
+
 app.get('/', function (req, res) {
     res.render('../views/pages/login');
 });
-
-// home page
 app.get('/home', function (req, res) {
     res.render('../views/pages/home');
+});
+app.get('/informations', function (req, res) {
+    res.render('../views/pages/informations');
+});
+app.get('/programmation', function (req, res) {
+    res.render('../views/pages/programmation');
+});
+app.get('/lieux', function (req, res) {
+    res.render('../views/pages/lieux');
 });
 
 module.exports = app;
