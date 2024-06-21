@@ -23,11 +23,24 @@ app.use((req, res, next) => {
     next();
 });
 
+app.set('view engine', 'ejs');
+
 app.use(bodyParser.json());
 
+app.use('/', userRoutes);
 app.use('/images', express.static(path.join(__dirname, 'images')));
 app.use('/api/event', eventRoutes);
-app.use('/api/auth', userRoutes);
+// app.use('/api/auth', userRoutes);
 app.use('/api/venue', venueRoutes);
+
+// index page
+app.get('/', function (req, res) {
+    res.render('../views/pages/login');
+});
+
+// home page
+app.get('/home', function (req, res) {
+    res.render('../views/pages/home');
+});
 
 module.exports = app;
