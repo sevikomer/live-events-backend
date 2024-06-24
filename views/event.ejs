@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <%- include('../partials/head'); %>
+    <%- include('./head'); %>
 </head>   
 <body>
 
     <header>
-        <%- include('../partials/header'); %>
+        <%- include('./header'); %>
       </header>
             <div class='text-orange p-8'>
                 <h1 class='lg:text-6xl text-4xl font-extrabold text-center pt-2 uppercase '>programmation</h1>
@@ -15,7 +15,7 @@
                 <div class='m-10 p-5 flex flex-col border border-solid border-black rounded-md'>
                     <h2 class='text-center text-xl font-bold leading-9 tracking-tight text-black'>Ajouter une programmation</h2>
                     <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-                        <form class="space-y-6" action="#" method="POST">
+                        <form class="space-y-6" action="/event/new" method="POST">
                             <div>
                                 <label htmlFor="image" class="block text-sm font-medium leading-6 text-black">
                                   Image
@@ -96,7 +96,30 @@
                 </div>
                 <div class='col-span-2 m-10 p-5 border border-solid border-black rounded-md'>
                     <h2 class='text-center text-xl font-bold leading-9 tracking-tight text-black'>Liste des programmations</h2>
-                </div>
+                <div class="">
+                  <% if (typeof events !== "undefined" && events.length > 0) { %>
+                            <div class="grid grid-cols-3 m-4">
+                              <% events.forEach((event, index) => { %>
+                                <ul id="tr-<%= index %>" class="mx-4 p-2 text-md flex flex-col border border-solid border-black rounded-md">
+                                    <li><img src="<%= event.image %>"/></li>
+                                    <li><span class="font-medium">Titre :</span> <%= event.title %></li>
+                                    <li><span class="font-medium">Lieu :</span> <%= event.location %></li>
+                                    <li><span class="font-medium">Date de début :</span> <%= event.start_date %></li>
+                                    <li class="mt-2">
+                                        <a href="/event/<%= event.id %>" id="a-view-<%= event.id %>" class="mb-2 flex w-full justify-center rounded-md bg-orange px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-yellow focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange">Voir</a>
+                                        <a href="/event/edit/<%= event.id %>" id="a-edit-<%= event.id %>" class="mb-2 flex w-full justify-center rounded-md bg-orange px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-yellow focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange">Modifier</a>
+                                        <button id="btn-delete-<%= event.id %>" data-id="<%= event.id %>" class="mb-2 flex w-full justify-center rounded-md bg-orange px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-yellow focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange">Supprimer</button>
+                                    </li>
+                                  </ul>
+                            <% }) %>
+
+                            <% } else { %>
+                              <div class="">
+                                  Vous n'avez pas encore de programmations.
+                              </div>
+                          <% } %> 
+                            </div>
+              </div>
             </div>
 </body>
 </html>

@@ -1,13 +1,20 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const session = require("cookie-session");
 const mongoose = require('mongoose');
 const path = require('path');
-const eventRoutes = require('./routes/event');
 const userRoutes = require('./routes/user');
+const eventRoutes = require('./routes/event');
+const eventApiRoutes = require('./routes/api/eventApi');
 const venueRoutes = require('./routes/venue');
+const venueApiRoutes = require('./routes/api/venueApi');
+const informationRoutes = require('./routes/information');
+const informationApiRoutes = require('./routes/api/informationApi');
 
-mongoose.connect('mongodb://127.0.0.1:27017/live-events',
-    {
+require("dotenv").config();
+
+mongoose
+    .connect(process.env.MONGO_CONNECTION, {
         useNewUrlParser: true,
         useUnifiedTopology: true
     })
@@ -15,6 +22,7 @@ mongoose.connect('mongodb://127.0.0.1:27017/live-events',
     .catch(() => console.log('Connexion à MongoDB échouée !'));
 
 const app = express();
+
 
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -25,29 +33,36 @@ app.use((req, res, next) => {
 
 app.set('view engine', 'ejs');
 
+app.use(session({ secret: process.env.SESSION_SECRET_KEY }));
+
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.use('/', userRoutes);
 app.use('/images', express.static(path.join(__dirname, 'images')));
-app.use('/api/event', eventRoutes);
-// app.use('/api/auth', userRoutes);
-app.use('/api/venue', venueRoutes);
+app.use('/event', eventRoutes);
+app.use('/api/event', eventApiRoutes);
+app.use('/venue', venueRoutes);
+app.use('/api/venue', venueApiRoutes);
+app.use('/information', informationRoutes);
+app.use('/api/information', informationApiRoutes);
 
 
-app.get('/', function (req, res) {
-    res.render('../views/pages/login');
-});
-app.get('/home', function (req, res) {
-    res.render('../views/pages/home');
-});
-app.get('/informations', function (req, res) {
-    res.render('../views/pages/informations');
-});
-app.get('/programmation', function (req, res) {
-    res.render('../views/pages/programmation');
-});
-app.get('/lieux', function (req, res) {
-    res.render('../views/pages/lieux');
-});
+
+// app.get('/login', function (req, res) {
+//     res.render('../views/pages/login');
+// });
+// app.get('/', function (req, res) {
+//     res.render('../views/pages/home');
+// });
+// app.get('/information', function (req, res) {
+//     res.render('../views/pages/information');
+// });
+// app.get('/event', function (req, res) {
+//     res.render('../views/pages/event');
+// });
+// app.get('/venue', function (req, res) {
+//     res.render('../views/pages/venue');
+// });
 
 module.exports = app;

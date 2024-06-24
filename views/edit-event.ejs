@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('./head'); %>
+</head>
+<body>
+    <header>
+        <%- include('./header'); %>
+      </header>
+
+    <div class="">
+        <div class="">
+            <div class="">
+                <div class="text-orange p-8">
+                    <h3 class='lg:text-4xl text-2xl font-extrabold text-center pt-2 uppercase' >modification d'une programmation</h3>
+                </div>
+                <div class="">
+                    <% if (typeof errors !== "undefined" && errors.length > 0) { %>
+                        <div id="erreur" class="">
+                            <ul class="">
+                                <% errors.forEach((error) => { %>
+                                    <li><%= error %></li>
+                                <% }) %>
+                            </ul>
+                        </div>
+                    <% } %>
+                    <form class="block" id="edit-car-form" method="post" action="/event/edit/<%= event.id %>">
+                        <div>
+                            <label htmlFor="image" class="block text-sm font-medium leading-6 text-black">
+                              Image
+                            </label>
+                            <div class="mt-2">
+                              <input
+                                id="image"
+                                name="image"
+                                type="file"
+                                autoComplete="image"
+                                required
+                                accept='image/png, image/jpg'
+                                class="block w-full rounded-md border-0 py-1.5 text-black shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange sm:text-sm sm:leading-6"
+                                <%= typeof event !== "undefined" && ` value=${event.image}` %>
+                              />
+                            </div>
+                          </div>
+            
+                          <div>
+                            <label htmlFor="title" class="block text-sm font-medium leading-6 text-black">
+                              Titre
+                            </label>
+                            <div class="mt-2">
+                              <input
+                                id="title"
+                                name="title"
+                                type="title"
+                                autoComplete="title"
+                                required
+                                class="block w-full rounded-md border-0 py-1.5 text-black shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange sm:text-sm sm:leading-6"
+                                <%= typeof event !== "undefined" && ` value=${event.title}` %>
+                              />
+                            </div>
+                          </div>
+            
+                          <div>
+                            <label htmlFor="location" class="block text-sm font-medium leading-6 text-black">
+                              Lieu
+                            </label>
+                            <div class="mt-2">
+                              <input
+                                id="location"
+                                name="location"
+                                type="location"
+                                autoComplete="location"
+                                required
+                                class="block w-full rounded-md border-0 py-1.5 text-black shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange sm:text-sm sm:leading-6"
+                                <%= typeof event !== "undefined" && ` value=${event.location}` %>
+                              />
+                            </div>
+                          </div>
+
+                        <div>
+                            <div class="flex items-center justify-between">
+                                <label htmlFor="start_date" class="block text-sm font-medium leading-6 text-gray-900">
+                                    Date de début
+                                </label>
+                            </div>
+                            <div class="mt-2">
+                                <input
+                                    id="start_date"
+                                    name="start_date"
+                                    type="start_date"
+                                    autoComplete="start_date"
+                                    required
+                                    class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange sm:text-sm sm:leading-6"
+                                    <%= typeof event !== "undefined" && ` value=${event.start_date}` %>
+                                />
+                            </div>
+                        </div>
+
+                        <div class="mt-2">
+                            <button
+                                type="submit"
+                                class="flex w-full justify-center rounded-md bg-orange px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-yellow focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange"
+                            >
+                                Modifier
+                            </button>
+                        </div>
+                        <div class="mt-2">
+                          <a href="/event" id="retour" class="mb-2 flex w-full justify-center rounded-md bg-orange px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-yellow focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange">Retour</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+</body>
+</html>

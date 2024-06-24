@@ -1,91 +1,157 @@
-const Venue = require('../models/Venue');
+const Venue = require("../models/Venue");
 
-exports.createVenue = (req, res, next) => {
+function getVenues(req, res) {
+    Venue.find()
+        .then((venues) => {
+            res.render("venue", { venues: venues });
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+}
+
+function getNewVenue(req, res) {
+    res.render("add-venue");
+}
+
+function postNewVenue(req, res) {
+    const errors = checkVenueInputs(req);
+
+    if (errors.length > 0) {
+        res.render("add-venue", {
+            venue: {
+                name: req.body.name,
+                category: req.body.category,
+                lat: req.body.lat,
+                lng: req.body.lng,
+            },
+            errors: errors,
+        });
+        return;
+    }
+
     const venue = new Venue({
         name: req.body.name,
         category: req.body.category,
         lat: req.body.lat,
-        lng: req.body.lng
+        lng: req.body.lng,
     });
-    venue.save().then(
-        () => {
-            res.status(201).json({
-                message: 'Venue saved successfully!'
-            });
-        }
-    ).catch(
-        (error) => {
-            res.status(400).json({
-                error: error
-            });
-        }
-    );
-};
 
-exports.getOneVenue = (req, res, next) => {
-    Venue.findOne({
-        _id: req.params.id
-    }).then(
-        (thing) => {
-            res.status(200).json(thing);
-        }
-    ).catch(
-        (error) => {
-            res.status(404).json({
-                error: error
+    venue
+        .save()
+        .then(() => {
+            res.redirect("/venue");
+        })
+        .catch((err) => {
+            res.render("venue", {
+                errors: [
+                    "Une erreur est survenue lors de l'enregistrement des données.",
+                ],
             });
-        }
-    );
-};
+        });
+}
 
-exports.modifyVenue = (req, res, next) => {
-    const venue = new Venue({
-        name: req.body.name,
-        category: req.body.category,
-        lat: req.body.lat,
-        lng: req.body.lng
-    });
-    Venue.updateOne({ _id: req.params.id }, venue).then(
-        () => {
-            res.status(201).json({
-                message: 'Venue updated successfully!'
-            });
-        }
-    ).catch(
-        (error) => {
-            res.status(400).json({
-                error: error
-            });
-        }
-    );
-};
+function viewVenue(req, res) {
+    const id = req.params.id;
 
-exports.deleteVenue = (req, res, next) => {
-    Venue.deleteOne({ _id: req.params.id }).then(
-        () => {
-            res.status(200).json({
-                message: 'Deleted!'
-            });
-        }
-    ).catch(
-        (error) => {
-            res.status(400).json({
-                error: error
-            });
-        }
-    );
-};
+    Venue.findById(id)
+        .then((venue) => {
+            if (venue) {
+                res.render("view-venue", { venue: venue });
+            } else {
+                res.redirect("/");
+            }
+        })
+        .catch((err) => {
+            res.redirect("/");
+        });
+}
 
-exports.getAllVenues = (req, res, next) => {
-    Venue.find().then(
-        (venues) => {
-            res.status(200).json(venues);
-        }
-    ).catch(
-        (error) => {
-            res.status(400).json({
-                error: error
-            });
-        }
-    );
+function getEditVenue(req, res) {
+
+    Venue.findById(req.params.id)
+        .then((venue) => {
+            if (!venue) {
+                res.redirect("/");
+                return;
+            }
+
+            res.render("edit-venue", { venue: venue });
+        })
+        .catch(() => {
+            res.redirect("/");
+        });
+}
+
+async function postEditVenue(req, res) {
+
+    const venue = await Venue.findById(req.params.id);
+
+    if (!venue) {
+        res.redirect("/venue");
+        return;
+    }
+
+    const errors = checkVenueInputs(req);
+
+    if (errors.length > 0) {
+        res.render("edit-venue", { venue: venue, errors: errors });
+        return;
+    }
+
+    venue.name = req.body.name;
+    venue.category = req.body.category;
+    venue.lat = req.body.lat;
+    venue.lng = req.body.lng;
+
+    venue
+        .save()
+        .then(() => {
+            res.redirect("/venue");
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+}
+
+async function deleteVenue(req, res) {
+    await Venue.findByIdAndDelete(req.params.id).catch(() => null);
+    res.redirect("/venue");
+}
+
+function checkVenueInputs(req) {
+    const errors = [];
+
+    const name = req.body.name;
+    const category = req.body.category;
+    const lat = req.body.lat;
+    const lng = req.body.lng;
+
+    if (typeof name === "undefined" || name === "") {
+        errors.push("Vous devez renseigner un nom");
+    }
+
+    if (typeof category === "undefined" || category === "") {
+        errors.push("Vous devez renseigner une catégorie");
+    }
+
+    if (typeof lat === "undefined" || lat === "") {
+        errors.push("Vous devez renseigner une latitude");
+    }
+
+    if (typeof lng === "undefined" || lng === "") {
+        errors.push("Vous devez renseigner une longitude");
+    }
+
+    return errors;
+}
+
+module.exports = {
+    getVenues,
+    getNewVenue,
+    postNewVenue,
+    viewVenue,
+    getEditVenue,
+    postEditVenue,
+    deleteVenue,
 };

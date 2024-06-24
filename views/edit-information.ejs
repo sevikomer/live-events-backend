@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('./head'); %>
+</head>
+<body>
+    <header>
+        <%- include('./header'); %>
+      </header>
+
+    <div class="">
+        <div class="">
+            <div class="">
+                <div class="text-orange p-8">
+                    <h3 class='lg:text-4xl text-2xl font-extrabold text-center pt-2 uppercase' >modification d'une information</h3>
+                </div>
+                <div class="">
+                    <% if (typeof errors !== "undefined" && errors.length > 0) { %>
+                        <div id="erreur" class="">
+                            <ul class="">
+                                <% errors.forEach((error) => { %>
+                                    <li><%= error %></li>
+                                <% }) %>
+                            </ul>
+                        </div>
+                    <% } %>
+                    <form class="block" id="edit-car-form" method="post" action="/information/edit/<%= information.id %>">
+                        <div>
+                            <label htmlFor="title" class="block text-sm font-medium leading-6 text-black">
+                              Titre
+                            </label>
+                            <div class="mt-2">
+                              <input
+                                id="title"
+                                name="title"
+                                type="title"
+                                autoComplete="title"
+                                required
+                                class="block w-full rounded-md border-0 py-1.5 text-black shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange sm:text-sm sm:leading-6"
+                                <%= typeof information !== "undefined" && ` value=${information.title}` %>
+                                >
+                            </div>
+                          </div>
+            
+                          <div>
+                            <div class="flex items-center justify-between">
+                              <label htmlFor="content" class="block text-sm font-medium leading-6 text-gray-900">
+                                Contenu
+                              </label>
+                            </div>
+                            <div class="mt-2">
+                              <textarea
+                                id="content"
+                                name="content"
+                                type="content"
+                                autoComplete="content"
+                                required
+                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange sm:text-sm sm:leading-6"
+                                <%= typeof information !== "undefined" && ` value=${information.content}` %>
+                                ></textarea>
+                            </div>
+                          </div>
+
+                          <div class="mt-2">
+                              <button
+                                  type="submit"
+                                  class="flex w-full justify-center rounded-md bg-orange px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-yellow focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange"
+                              >
+                                  Modifier
+                              </button>
+                          </div>
+                          <div class="mt-2">
+                            <a href="/information" id="retour" class="mb-2 flex w-full justify-center rounded-md bg-orange px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-yellow focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange">Retour</a>
+                          </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+</body>
+</html>

@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <%- include('../partials/head'); %>
+    <%- include('./head'); %>
 </head>   
 <body>
 
     <header>
-        <%- include('../partials/header'); %>
+        <%- include('./header'); %>
       </header>
             <div class='text-orange p-8'>
                 <h1 class='lg:text-6xl text-4xl font-extrabold text-center pt-2 uppercase '>lieux</h1>
@@ -15,7 +15,16 @@
                 <div class='m-10 p-5 flex flex-col border border-solid border-black rounded-md'>
                     <h2 class='text-center text-xl font-bold leading-9 tracking-tight text-black'>Ajouter un lieu</h2>
                     <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-                        <form class="space-y-6" action="#" method="POST">
+                        <% if (typeof errors !== "undefined" && errors.length > 0) { %>
+                            <div id="erreur" class="">
+                                <ul class="">
+                                    <% errors.forEach((error) => { %>
+                                        <li><%= error %></li>
+                                    <% }) %>
+                                </ul>
+                            </div>
+                        <% } %>
+                        <form class="space-y-6" action="/venue/new" method="POST">
                             <div>
                               <label htmlFor="name" class="block text-sm font-medium leading-6 text-black">
                                 Nom
@@ -28,7 +37,8 @@
                                   autoComplete="name"
                                   required
                                   class="block w-full rounded-md border-0 py-1.5 text-black shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange sm:text-sm sm:leading-6"
-                                />
+                                  <%= typeof venue !== "undefined" && ` value=${venue.name}` %>
+                                  >
                               </div>
                             </div>
               
@@ -46,7 +56,8 @@
                                   autoComplete="category"
                                   required
                                   class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange sm:text-sm sm:leading-6"
-                                />
+                                  <%= typeof venue !== "undefined" && ` value=${venue.category}` %>
+                                  >
                               </div>
                             </div>
               
@@ -62,7 +73,8 @@
                                   autoComplete="lat"
                                   required
                                   class="block w-full rounded-md border-0 py-1.5 text-black shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange sm:text-sm sm:leading-6"
-                                />
+                                  <%= typeof venue !== "undefined" && ` value=${venue.lat}` %>
+                                  >
                               </div>
                             </div>
               
@@ -78,7 +90,8 @@
                                   autoComplete="lng"
                                   required
                                   class="block w-full rounded-md border-0 py-1.5 text-black shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange sm:text-sm sm:leading-6"
-                                />
+                                  <%= typeof venue !== "undefined" && ` value=${venue.lng}` %>
+                                  >
                               </div>
                             </div>
 
@@ -95,6 +108,30 @@
                 </div>
                 <div class='col-span-2 m-10 p-5 border border-solid border-black rounded-md'>
                     <h2 class='text-center text-xl font-bold leading-9 tracking-tight text-black'>Liste des lieux</h2>
+                    <div class="">
+                        <% if (typeof venues !== "undefined" && venues.length > 0) { %>
+                                  <div class="grid grid-cols-3 m-4">
+                                    <% venues.forEach((venue, index) => { %>
+                                      <ul id="tr-<%= index %>" class="mx-4 p-2 text-md flex flex-col border border-solid border-black rounded-md">
+                                          <li><span class="font-medium">Nom :</span> <%= venue.name %></li>
+                                          <li><span class="font-medium">Catégorie :</span> <%= venue.category %></li>
+                                          <li><span class="font-medium">Latitude :</span> <%= venue.lat %></li>
+                                          <li><span class="font-medium">Longitude :</span> <%= venue.lng %></li>
+                                          <li class="mt-2">
+                                              <a href="/venue/<%= venue.id %>" id="a-view-<%= venue.id %>" class="mb-2 flex w-full justify-center rounded-md bg-orange px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-yellow focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange">Voir</a>
+                                              <a href="/venue/edit/<%= venue.id %>" id="a-edit-<%= venue.id %>" class="mb-2 flex w-full justify-center rounded-md bg-orange px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-yellow focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange">Modifier</a>
+                                              <button id="btn-delete-<%= venue.id %>" data-id="<%= venue.id %>" class="mb-2 flex w-full justify-center rounded-md bg-orange px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-yellow focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange">Supprimer</button>
+                                          </li>
+                                        </ul>
+                                  <% }) %>
+                                  </div>
+                                    
+                        <% } else { %>
+                            <div class="">
+                                Vous n'avez pas encore de lieux.
+                            </div>
+                        <% } %> 
+                    </div>
                 </div>
             </div>
 </body>

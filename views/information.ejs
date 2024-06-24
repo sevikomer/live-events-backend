@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <%- include('./head'); %>
+</head>   
+<body>
+
+    <header>
+        <%- include('./header'); %>
+      </header>
+            <div class='text-orange p-8'>
+                <h1 class='lg:text-6xl text-4xl font-extrabold text-center pt-2 uppercase '>informations</h1>
+            </div>
+            <div class='grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1'>
+                <div class='m-10 p-5 flex flex-col border border-solid border-black rounded-md'>
+                    <h2 class='text-center text-xl font-bold leading-9 tracking-tight text-black'>Ajouter une information</h2>
+                    <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+                        <% if (typeof errors !== "undefined" && errors.length > 0) { %>
+                            <div id="erreur" class="">
+                                <ul class="">
+                                    <% errors.forEach((error) => { %>
+                                        <li><%= error %></li>
+                                    <% }) %>
+                                </ul>
+                            </div>
+                        <% } %>
+                        <form class="space-y-6" action="/information/new" method="POST">
+                            <div>
+                              <label htmlFor="title" class="block text-sm font-medium leading-6 text-black">
+                                Titre
+                              </label>
+                              <div class="mt-2">
+                                <input
+                                  id="title"
+                                  name="title"
+                                  type="title"
+                                  autoComplete="title"
+                                  required
+                                  class="block w-full rounded-md border-0 py-1.5 text-black shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange sm:text-sm sm:leading-6"
+                                  <%= typeof information !== "undefined" && ` value=${information.title}` %>
+                                  >
+                              </div>
+                            </div>
+              
+                            <div>
+                              <div class="flex items-center justify-between">
+                                <label htmlFor="content" class="block text-sm font-medium leading-6 text-gray-900">
+                                  Contenu
+                                </label>
+                              </div>
+                              <div class="mt-2">
+                                <textarea
+                                  id="content"
+                                  name="content"
+                                  type="content"
+                                  autoComplete="content"
+                                  required
+                                  class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange sm:text-sm sm:leading-6"
+                                  <%= typeof information !== "undefined" && ` value=${information.content}` %>
+                                  ></textarea>
+                              </div>
+                            </div>
+
+                            <div>
+                                <button
+                                    type="submit"
+                                    class="flex w-full justify-center rounded-md bg-orange px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-yellow focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange"
+                                >
+                                    Ajouter
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class='col-span-2 m-10 p-5 border border-solid border-black rounded-md'>
+                    <h2 class='text-center text-xl font-bold leading-9 tracking-tight text-black'>Liste des informations</h2>
+                    <div class="">
+                        
+                        <% if (typeof informations !== "undefined" && informations.length > 0) { %>
+                                  <div class="grid grid-cols-3 m-4">
+                                    <% informations.forEach((information, index) => { %>
+                                      <ul id="tr-<%= index %>" class="mx-4 p-2 text-md flex flex-col border border-solid border-black rounded-md">
+                                          <li><span class="font-medium">Titre :</span> <%= information.title %></li>
+                                          <li><span class="font-medium">Contenu :</span> <%= information.content %></li>
+                                          <li class="mt-2">
+                                              <a href="/information/<%= information.id %>" id="a-view-<%= information.id %>" class="mb-2 flex w-full justify-center rounded-md bg-orange px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-yellow focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange">Voir</a>
+                                              <a href="/information/edit/<%= information.id %>" id="a-edit-<%= information.id %>" class="mb-2 flex w-full justify-center rounded-md bg-orange px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-yellow focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange">Modifier</a>
+                                              <button id="btn-delete-<%= information.id %>" data-id="<%= information.id %>" class="mb-2 flex w-full justify-center rounded-md bg-orange px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-yellow focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange">Supprimer</button>
+                                          </li>
+                                        </ul>
+                                  <% }) %>
+                                  </div>
+                                    
+                        <% } else { %>
+                            <div class="">
+                                Vous n'avez pas encore d'informations.
+                            </div>
+                        <% } %> 
+                    </div>
+                </div>
+            </div>
+            <script>
+
+                let btnDeletes = document.querySelectorAll(".btn-delete");
+            
+                btnDeletes.forEach((btnDelete) => {
+                    // ajoute l'évènement click sur chaque bouton 
+                    btnDelete.addEventListener("click", (e) => {
+                        if (window.confirm("Voulez vous supprimer l'information ?")) {
+                            // redirige vers l'url /information/delete/id
+                            window.location.href = "/information/delete/" + btnDelete.getAttribute("information-id");
+                        }
+                    });
+                });
+            </script>
+</body>
+</html>

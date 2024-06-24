@@ -1,15 +1,20 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
+const eventCtrl = require("../controllers/event");
+const auth = require("../middleware/auth");
 
-const auth = require('../middleware/auth');
-const multer = require('../middleware/multer-config');
+router.use(auth);
 
-const eventCtrl = require('../controllers/event');
+router.get("/", eventCtrl.getEvents);
 
-router.get('/', auth, eventCtrl.getAllEvents);
-router.post('/', auth, multer, eventCtrl.createEvent);
-router.get('/:id', auth, eventCtrl.getOneEvent);
-router.put('/:id', auth, multer, eventCtrl.modifyEvent);
-router.delete('/:id', auth, eventCtrl.deleteEvent);
+router.get("/new", eventCtrl.getNewEvent);
+router.post("/new", eventCtrl.postNewEvent);
+
+router.get("/edit/:id", eventCtrl.getEditEvent);
+router.post("/edit/:id", eventCtrl.postEditEvent);
+
+router.get("/:id", eventCtrl.viewEvent);
+
+router.get("/delete/:id", eventCtrl.deleteEvent);
 
 module.exports = router;

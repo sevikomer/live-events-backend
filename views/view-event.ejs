@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('./head'); %>
+</head>
+<body>
+    <header>
+        <%- include('./header'); %>
+      </header>
+
+    <div class="">
+        <div class="">
+            <div class="">
+                <div class="text-orange p-8">
+                    <h3 class='lg:text-4xl text-2xl font-extrabold text-center pt-2 uppercase' >informations de la programmation</h3>
+                </div>
+                <ul id="" class="mx-4 text-md flex flex-col border border-solid border-black rounded-md">
+                    <li><img src="`${req.protocol}://${req.get('host')}/images/${<%= event.image %>}`" <%= event.image %>/></li>
+                    <li><span class="font-medium">Titre :</span> <%= event.title %></li>
+                    <li><span class="font-medium">Lieu :</span> <%= event.location %></li>
+                    <li><span class="font-medium">Date de début :</span> <%= event.start_date %></li>
+                    <li class="mt-2">
+                        <a href="/event" id="retour" class="mb-2 flex w-full justify-center rounded-md bg-orange px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-yellow focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange">Retour</a>
+                    </li>
+                  </ul>
+            </div>
+        </div>
+</body>
+</html>

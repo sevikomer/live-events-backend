@@ -1,88 +1,157 @@
-const Event = require('../models/Event');
-const fs = require('fs');
+const Event = require("../models/Event");
 
-exports.createEvent = (req, res, next) => {
-    const eventObject = JSON.parse(req.body.event);
-    delete eventObject._id;
-    delete eventObject._userId;
+function getEvents(req, res) {
+    Event.find()
+        .then((events) => {
+            res.render("event", { events: events });
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+}
+
+function getNewEvent(req, res) {
+    res.render("add-event");
+}
+
+function postNewEvent(req, res) {
+    const errors = checkEventInputs(req);
+
+    if (errors.length > 0) {
+        res.render("add-event", {
+            event: {
+                image: req.body.image,
+                title: req.body.title,
+                location: req.body.location,
+                start_date: req.body.start_date,
+            },
+            errors: errors,
+        });
+        return;
+    }
+
     const event = new Event({
-        ...eventObject,
-        userId: req.auth.userId,
-        imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+        image: req.body.image,
+        title: req.body.title,
+        location: req.body.location,
+        start_date: req.body.start_date,
     });
 
-    event.save()
-        .then(() => { res.status(201).json({ message: 'Event enregistré !' }) })
-        .catch(error => { res.status(400).json({ error }) })
-};
-
-exports.getOneEvent = (req, res, next) => {
-    Event.findOne({
-        _id: req.params.id
-    }).then(
-        (thing) => {
-            res.status(200).json(thing);
-        }
-    ).catch(
-        (error) => {
-            res.status(404).json({
-                error: error
+    event
+        .save()
+        .then(() => {
+            res.redirect("/event");
+        })
+        .catch((err) => {
+            res.render("event", {
+                errors: [
+                    "Une erreur est survenue lors de l'enregistrement des données.",
+                ],
             });
-        }
-    );
-};
+        });
+}
 
-exports.modifyEvent = (req, res, next) => {
-    const eventObject = req.file ? {
-        ...JSON.parse(req.body.event),
-        imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
-    } : { ...req.body };
+function viewEvent(req, res) {
+    const id = req.params.id;
 
-    delete eventObject._userId;
-    Event.findOne({ _id: req.params.id })
+    Event.findById(id)
         .then((event) => {
-            if (event.userId != req.auth.userId) {
-                res.status(401).json({ message: 'Not authorized' });
+            if (event) {
+                res.render("view-event", { event: event });
             } else {
-                Event.updateOne({ _id: req.params.id }, { ...eventObject, _id: req.params.id })
-                    .then(() => res.status(200).json({ message: 'Event modifié!' }))
-                    .catch(error => res.status(401).json({ error }));
+                res.redirect("/");
             }
         })
-        .catch((error) => {
-            res.status(400).json({ error });
+        .catch((err) => {
+            res.redirect("/");
         });
-};
+}
 
-exports.deleteEvent = (req, res, next) => {
-    Event.findOne({ _id: req.params.id })
-        .then(event => {
-            if (event.userId != req.auth.userId) {
-                res.status(401).json({ message: 'Not authorized' });
-            } else {
-                const filename = event.imageUrl.split('/images/')[1];
-                fs.unlink(`images/${filename}`, () => {
-                    Event.deleteOne({ _id: req.params.id })
-                        .then(() => { res.status(200).json({ message: 'Event supprimé !' }) })
-                        .catch(error => res.status(401).json({ error }));
-                });
+function getEditEvent(req, res) {
+
+    Event.findById(req.params.id)
+        .then((event) => {
+            if (!event) {
+                res.redirect("/");
+                return;
             }
-        })
-        .catch(error => {
-            res.status(500).json({ error });
-        });
-};
 
-exports.getAllEvents = (req, res, next) => {
-    Event.find().then(
-        (events) => {
-            res.status(200).json(events);
-        }
-    ).catch(
-        (error) => {
-            res.status(400).json({
-                error: error
-            });
-        }
-    );
+            res.render("edit-event", { event: event });
+        })
+        .catch(() => {
+            res.redirect("/");
+        });
+}
+
+async function postEditEvent(req, res) {
+
+    const event = await Event.findById(req.params.id);
+
+    if (!event) {
+        res.redirect("/event");
+        return;
+    }
+
+    const errors = checkEventInputs(req);
+
+    if (errors.length > 0) {
+        res.render("edit-event", { event: event, errors: errors });
+        return;
+    }
+
+    event.image = req.body.image;
+    event.title = req.body.title;
+    location.lat = req.body.location;
+    start_date.lng = req.body.start_date;
+
+    event
+        .save()
+        .then(() => {
+            res.redirect("/event");
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+}
+
+async function deleteEvent(req, res) {
+    await Event.findByIdAndDelete(req.params.id).catch(() => null);
+    res.redirect("/event");
+}
+
+function checkEventInputs(req) {
+    const errors = [];
+
+    const image = req.body.image;
+    const title = req.body.title;
+    const location = req.body.location;
+    const start_date = req.body.start_date;
+
+    if (typeof image === "undefined" || image === "") {
+        errors.push("Vous devez renseigner une image");
+    }
+
+    if (typeof title === "undefined" || title === "") {
+        errors.push("Vous devez renseigner un titre");
+    }
+
+    if (typeof location === "undefined" || location === "") {
+        errors.push("Vous devez renseigner un lieu");
+    }
+
+    if (typeof start_date === "undefined" || start_date === "") {
+        errors.push("Vous devez renseigner une date de début");
+    }
+
+    return errors;
+}
+
+module.exports = {
+    getEvents,
+    getNewEvent,
+    postNewEvent,
+    viewEvent,
+    getEditEvent,
+    postEditEvent,
+    deleteEvent,
 };
