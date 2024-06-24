@@ -4,7 +4,7 @@
     <%- include('./head'); %>
 </head>   
 <body>
-
+    
     <header>
         <%- include('./header'); %>
       </header>
@@ -85,7 +85,7 @@
                                           <li class="mt-2">
                                               <a href="/information/<%= information.id %>" id="a-view-<%= information.id %>" class="mb-2 flex w-full justify-center rounded-md bg-orange px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-yellow focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange">Voir</a>
                                               <a href="/information/edit/<%= information.id %>" id="a-edit-<%= information.id %>" class="mb-2 flex w-full justify-center rounded-md bg-orange px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-yellow focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange">Modifier</a>
-                                              <button id="btn-delete-<%= information.id %>" data-id="<%= information.id %>" class="mb-2 flex w-full justify-center rounded-md bg-orange px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-yellow focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange">Supprimer</button>
+                                              <a href="/information/delete/<%= information.id %>" id="a-delete-<%= information.id %>" class="mb-2 flex w-full justify-center rounded-md bg-orange px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-yellow focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange">Supprimer</a>
                                           </li>
                                         </ul>
                                   <% }) %>
@@ -99,19 +99,5 @@
                     </div>
                 </div>
             </div>
-            <script>
-
-                let btnDeletes = document.querySelectorAll(".btn-delete");
-            
-                btnDeletes.forEach((btnDelete) => {
-                    // ajoute l'évènement click sur chaque bouton 
-                    btnDelete.addEventListener("click", (e) => {
-                        if (window.confirm("Voulez vous supprimer l'information ?")) {
-                            // redirige vers l'url /information/delete/id
-                            window.location.href = "/information/delete/" + btnDelete.getAttribute("information-id");
-                        }
-                    });
-                });
-            </script>
 </body>
 </html>
