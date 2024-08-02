@@ -9,7 +9,7 @@
         <%- include('./header'); %>
       </header>
             <div class='text-orange p-8'>
-                <h1 class='lg:text-6xl text-4xl font-extrabold text-center pt-2 uppercase '>programmation</h1>
+                <h1 class='lg:text-6xl text-4xl font-extrabold text-center pt-2 uppercase '>programmations</h1>
             </div>
             <div class='grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1'>
                 <div class='m-10 p-5 flex flex-col border border-solid border-black rounded-md'>
@@ -27,7 +27,7 @@
                                     type="file"
                                     autoComplete="image"
                                     required
-                                    accept='image/png, image/jpg'
+                                    accept="image/*"
                                     class="block w-full rounded-md border-0 py-1.5 text-black shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange sm:text-sm sm:leading-6"
                                   />
                                 </div>
@@ -50,18 +50,23 @@
                               </div>
                 
                               <div>
-                                <label htmlFor="location" class="block text-sm font-medium leading-6 text-black">
+                                <label htmlFor="venue" class="block text-sm font-medium leading-6 text-black">
                                   Lieu
                                 </label>
-                                <div class="mt-2">
-                                  <input
+                                <div class="mt-2 text-black">
+                                  <!-- <input
                                     id="location"
                                     name="location"
                                     type="location"
                                     autoComplete="location"
                                     required
                                     class="block w-full rounded-md border-0 py-1.5 text-black shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange sm:text-sm sm:leading-6"
-                                  />
+                                  /> -->
+                                  <select name="venue" class="block w-full rounded-md border-0 py-1.5 text-black shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange sm:text-sm sm:leading-6" id="venue">
+                                    <% venues?.forEach((venue, index) => { %>
+                                         <option value="<%= venue.id%>" class="text-black"><%= venue.name %></option>
+                                  <% }) %>
+                                </select>
                                 </div>
                               </div>
 
@@ -77,6 +82,7 @@
                                         name="start_date"
                                         type="start_date"
                                         autoComplete="start_date"
+                                        placeholder="2024-01-01"
                                         required
                                         class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-orange sm:text-sm sm:leading-6"
                                     />
@@ -103,7 +109,7 @@
                                 <ul id="tr-<%= index %>" class="mx-4 p-2 text-md flex flex-col border border-solid border-black rounded-md">
                                     <li><img src="../images/<%= event.image %>"/></li>
                                     <li><span class="font-medium">Titre :</span> <%= event.title %></li>
-                                    <li><span class="font-medium">Lieu :</span> <%= event.location %></li>
+                                    <li><span class="font-medium">Lieu :</span> <%= event.venue?.name %></li>
                                     <li><span class="font-medium">Date de début :</span> <%= event.start_date %></li>
                                     <li class="mt-2">
                                         <a href="/event/<%= event.id %>" id="a-view-<%= event.id %>" class="mb-2 flex w-full justify-center rounded-md bg-orange px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-yellow focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange">Voir</a>

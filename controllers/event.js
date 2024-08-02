@@ -1,13 +1,10 @@
 const Event = require("../models/Event");
+const Venue = require("../models/Venue");
 
-function getEvents(req, res) {
-    Event.find()
-        .then((events) => {
-            res.render("event", { events: events });
-        })
-        .catch((err) => {
-            console.log(err);
-        });
+async function getEvents(req, res) {
+    const events = await Event.find().populate("venue").exec();
+    const venues = await Venue.find({ category: "scene" }).exec();
+    res.render("event", { events, venues });
 }
 
 function getNewEvent(req, res) {
@@ -22,7 +19,7 @@ function postNewEvent(req, res) {
             event: {
                 image: req.body.image,
                 title: req.body.title,
-                location: req.body.location,
+                venue: req.body.venue,
                 start_date: req.body.start_date,
             },
             errors: errors,
@@ -33,7 +30,7 @@ function postNewEvent(req, res) {
     const event = new Event({
         image: req.body.image,
         title: req.body.title,
-        location: req.body.location,
+        venue: req.body.venue,
         start_date: req.body.start_date,
     });
 
@@ -55,9 +52,10 @@ function viewEvent(req, res) {
     const id = req.params.id;
 
     Event.findById(id)
+        .populate('venue')
         .then((event) => {
             if (event) {
-                res.render("view-event", { event: event });
+                res.render("view-event", { event });
             } else {
                 res.redirect("/");
             }
@@ -67,25 +65,23 @@ function viewEvent(req, res) {
         });
 }
 
-function getEditEvent(req, res) {
-
-    Event.findById(req.params.id)
-        .then((event) => {
-            if (!event) {
-                res.redirect("/");
-                return;
-            }
-
-            res.render("edit-event", { event: event });
-        })
-        .catch(() => {
+async function getEditEvent(req, res) {
+    try {
+        const event = await Event.findById(req.params.id).lean().populate("venue").exec();
+        const venues = await Venue.find({ category: "scene" }).exec();
+        if (!event) {
             res.redirect("/");
-        });
-}
+            return;
+        }
+
+        res.render("edit-event", { event, venues });
+    } catch (error) {
+        res.redirect("/");
+    }
+};
 
 async function postEditEvent(req, res) {
-
-    const event = await Event.findById(req.params.id);
+    const event = await Event.findById(req.params.id).populate('venue');
 
     if (!event) {
         res.redirect("/event");
@@ -101,8 +97,8 @@ async function postEditEvent(req, res) {
 
     event.image = req.body.image;
     event.title = req.body.title;
-    location.lat = req.body.location;
-    start_date.lng = req.body.start_date;
+    event.venue = req.body.venue;
+    event.start_date = req.body.start_date;
 
     event
         .save()
@@ -124,7 +120,7 @@ function checkEventInputs(req) {
 
     const image = req.body.image;
     const title = req.body.title;
-    const location = req.body.location;
+    const venue = req.body.venue;
     const start_date = req.body.start_date;
 
     if (typeof image === "undefined" || image === "") {
@@ -135,7 +131,7 @@ function checkEventInputs(req) {
         errors.push("Vous devez renseigner un titre");
     }
 
-    if (typeof location === "undefined" || location === "") {
+    if (typeof venue === "undefined" || venue === "") {
         errors.push("Vous devez renseigner un lieu");
     }
 
