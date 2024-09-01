@@ -77,7 +77,7 @@
                     <div class="">
                         
                         <% if (typeof informations !== "undefined" && informations.length > 0) { %>
-                                  <div class="grid grid-cols-3 m-4">
+                                  <div class="grid grid-cols-3 p-2 m-4">
                                     <% informations.forEach((information, index) => { %>
                                       <ul id="tr-<%= index %>" class="mx-4 p-2 text-md flex flex-col border border-solid border-black rounded-md">
                                           <li><span class="font-medium">Titre :</span> <%= information.title %></li>

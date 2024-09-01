@@ -5,7 +5,7 @@ const auth = require('../../middleware/auth');
 
 const venueApiCtrl = require('../../controllers/venueApi');
 
-router.get('/', auth, venueApiCtrl.getAllVenues);
+router.get('/', venueApiCtrl.getAllVenues);
 router.post('/new', auth, venueApiCtrl.createVenue);
 router.get('/:id', auth, venueApiCtrl.getOneVenue);
 router.put('/:id', auth, venueApiCtrl.modifyVenue);
