@@ -18,6 +18,7 @@ exports.createEvent = (req, res, next) => {
 
 exports.getOneEvent = (req, res, next) => {
     Event.findOne({ _id: req.params.id })
+        .populate("venue")
         .then((event) => { res.status(200).json(event) })
         .catch((error) => { res.status(404).json({ error: error }) });
 };
@@ -64,7 +65,7 @@ exports.deleteEvent = (req, res, next) => {
 };
 
 exports.getAllEvents = (req, res, next) => {
-    Event.find().then(
+    Event.find().populate("venue").then(
         (events) => {
             res.status(200).json(events);
         }

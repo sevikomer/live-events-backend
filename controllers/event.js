@@ -83,6 +83,7 @@ async function getEditEvent(req, res) {
 async function postEditEvent(req, res) {
     const event = await Event.findById(req.params.id).populate('venue');
 
+
     if (!event) {
         res.redirect("/event");
         return;
