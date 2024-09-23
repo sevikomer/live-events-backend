@@ -20,12 +20,12 @@ exports.getOneVenue = (req, res, next) => {
 };
 
 exports.modifyVenue = (req, res, next) => {
-    const venue = new Venue({
+    const venue = {
         name: req.body.name,
         category: req.body.category,
         lat: req.body.lat,
         lng: req.body.lng
-    });
+    };
     Venue.updateOne({ _id: req.params.id }, venue)
         .then((venue) => { res.status(201).json(venue) })
         .catch((error) => { res.status(400).json({ error: error }) });

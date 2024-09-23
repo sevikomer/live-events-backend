@@ -18,10 +18,10 @@ exports.getOneInformation = (req, res, next) => {
 };
 
 exports.modifyInformation = (req, res, next) => {
-    const information = new Information({
+    const information = {
         title: req.body.title,
         content: req.body.content,
-    });
+    };
     Information.updateOne({ _id: req.params.id }, information)
         .then((information) => { res.status(201).json(information) })
         .catch((error) => { res.status(400).json({ error: error }) });

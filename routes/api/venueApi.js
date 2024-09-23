@@ -7,7 +7,7 @@ const venueApiCtrl = require('../../controllers/venueApi');
 
 router.get('/', venueApiCtrl.getAllVenues);
 router.post('/new', auth, venueApiCtrl.createVenue);
-router.get('/:id', auth, venueApiCtrl.getOneVenue);
+router.get('/:id', venueApiCtrl.getOneVenue);
 router.put('/:id', auth, venueApiCtrl.modifyVenue);
 router.delete('/:id', auth, venueApiCtrl.deleteVenue);
 
