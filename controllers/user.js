@@ -99,6 +99,17 @@ async function logUser(req, res) {
         return;
     }
 
+    if (user != null && user.password != null) {
+        errors.push("Email ou mot de passe incorrect.");
+
+        res.render("login", {
+            errors: errors,
+            email: email,
+        });
+
+        return;
+    }
+
     const comparaison = await bcrypt.compare(password, user.password)
 
     if (!comparaison) {
