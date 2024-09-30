@@ -99,7 +99,7 @@ async function logUser(req, res) {
         return;
     }
 
-    const comparaison = await bcrypt.compare(password, hash)
+    const comparaison = await bcrypt.compare(password, user.password)
 
     if (!comparaison) {
         errors.push("Email ou mot de passe incorrect.");
