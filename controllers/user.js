@@ -86,7 +86,7 @@ async function logUser(req, res) {
         return;
     }
 
-    const user = await User.findOne({ email: email, password: password });
+    const user = await User.findOne({ email: email });
 
     if (user != null && user.length === 0) {
         errors.push("Email ou mot de passe incorrect.");
@@ -99,7 +99,7 @@ async function logUser(req, res) {
         return;
     }
 
-    const comparaison = await bcrypt.compare(password, user.password)
+    const comparaison = await bcrypt.compare(password, user?.password)
 
     if (!comparaison) {
         errors.push("Email ou mot de passe incorrect.");
