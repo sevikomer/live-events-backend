@@ -86,20 +86,9 @@ async function logUser(req, res) {
         return;
     }
 
-    const user = await User.findOne({ email: email });
+    const user = await User.findOne({ email: email, password: password });
 
     if (user != null && user.length === 0) {
-        errors.push("Email ou mot de passe incorrect.");
-
-        res.render("login", {
-            errors: errors,
-            email: email,
-        });
-
-        return;
-    }
-
-    if (user != null && user.password != null) {
         errors.push("Email ou mot de passe incorrect.");
 
         res.render("login", {
