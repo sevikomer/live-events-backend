@@ -24,25 +24,32 @@ function login(req, res, next) {
         .then(user => {
             if (!user) {
                 return res.status(401).json({ error: 'Utilisateur non trouvé !' });
+            } else {
+                bcrypt.compare(req.body.password, user.password)
+                    .then(valid => {
+                        if (!valid) {
+                            return res.status(401).json({ error: 'Mot de passe incorrect !' });
+                        } else {
+                            res.status(200).json({
+                                userId: user._id,
+                                token: jwt.sign(
+                                    { userId: user._id },
+                                    process.env.RANDOM_TOKEN_SECRET,
+                                    { expiresIn: '24h' }
+                                )
+                            });
+                        }
+                    })
+                    .catch(error => res.status(500).json({ error }));
+
+                req.session.userLogged = user._id;
+                res.redirect("/");
+
             }
-            bcrypt.compare(req.body.password, user.password)
-                .then(valid => {
-                    if (!valid) {
-                        return res.status(401).json({ error: 'Mot de passe incorrect !' });
-                    }
-                    res.status(200).json({
-                        userId: user._id,
-                        token: jwt.sign(
-                            { userId: user._id },
-                            process.env.RANDOM_TOKEN_SECRET,
-                            { expiresIn: '24h' }
-                        )
-                    });
-                })
-                .catch(error => res.status(500).json({ error }));
         })
         .catch(error => res.status(500).json({ error }));
 };
+
 
 function getConnection(req, res) {
     if (req.session.userLogged) {
@@ -50,7 +57,7 @@ function getConnection(req, res) {
         return;
     }
 
-    res.render("login");
+    else res.render("login");
 }
 
 function getHome(req, res) {
@@ -59,7 +66,7 @@ function getHome(req, res) {
         return;
     }
 
-    res.render("home");
+    else res.render("home");
 
 }
 
@@ -86,7 +93,7 @@ async function logUser(req, res) {
         return;
     }
 
-    const user = await User.findOne({ email: email });
+    const user = User.findOne({ email: email });
 
     if (user == null && user?.length == 0) {
         errors.push("Email ou mot de passe incorrect.");
@@ -103,7 +110,6 @@ async function logUser(req, res) {
 
     if (!comparaison) {
         errors.push("Email ou mot de passe incorrect.");
-
         res.render("login", {
             errors: errors,
             email: email,
@@ -119,7 +125,7 @@ async function logUser(req, res) {
 
 function logoutUser(req, res) {
     req.session.userLogged = null;
-    res.redirect("/login");
+    res.redirect("/login")
 }
 
 module.exports = { getConnection, getHome, logUser, logoutUser, signup, login };
