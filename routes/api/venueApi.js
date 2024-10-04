@@ -1,14 +1,13 @@
 const express = require('express');
 const router = express.Router();
 
-const auth = require('../../middleware/auth');
-
 const venueApiCtrl = require('../../controllers/venueApi');
+const authAPI = require('../../middleware/authAPI');
 
 router.get('/', venueApiCtrl.getAllVenues);
-router.post('/new', auth, venueApiCtrl.createVenue);
+router.post('/new', authAPI, venueApiCtrl.createVenue);
 router.get('/:id', venueApiCtrl.getOneVenue);
-router.put('/:id', auth, venueApiCtrl.modifyVenue);
-router.delete('/:id', auth, venueApiCtrl.deleteVenue);
+router.put('/:id', authAPI, venueApiCtrl.modifyVenue);
+router.delete('/:id', authAPI, venueApiCtrl.deleteVenue);
 
 module.exports = router;

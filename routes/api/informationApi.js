@@ -1,14 +1,13 @@
 const express = require('express');
 const router = express.Router();
 
-const auth = require('../../middleware/auth');
-
 const informationApiCtrl = require('../../controllers/informationApi');
+const authAPI = require('../../middleware/authAPI');
 
-router.get('/', auth, informationApiCtrl.getAllInformations);
-router.post('/new', auth, informationApiCtrl.createInformation);
-router.get('/:id', auth, informationApiCtrl.getOneInformation);
-router.put('/:id', auth, informationApiCtrl.modifyInformation);
-router.delete('/:id', auth, informationApiCtrl.deleteInformation);
+router.get('/', informationApiCtrl.getAllInformations);
+router.post('/new', authAPI, informationApiCtrl.createInformation);
+router.get('/:id', informationApiCtrl.getOneInformation);
+router.put('/:id', authAPI, informationApiCtrl.modifyInformation);
+router.delete('/:id', authAPI, informationApiCtrl.deleteInformation);
 
 module.exports = router;

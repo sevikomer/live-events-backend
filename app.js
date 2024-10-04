@@ -10,7 +10,7 @@ const venueRoutes = require('./routes/venue');
 const venueApiRoutes = require('./routes/api/venueApi');
 const informationRoutes = require('./routes/information');
 const informationApiRoutes = require('./routes/api/informationApi');
-const usersRoutes = require('./routes/user');
+const userAPIRoutes = require('./routes/api/userApi');
 
 require("dotenv").config();
 
@@ -47,7 +47,7 @@ app.use('/venue', venueRoutes);
 app.use('/api/venue', venueApiRoutes);
 app.use('/information', informationRoutes);
 app.use('/api/information', informationApiRoutes);
-app.use('/api/users', usersRoutes);
+app.use('/api/user', userAPIRoutes);
 
 
 module.exports = app;
