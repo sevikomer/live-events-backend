@@ -30,24 +30,16 @@ function login(req, res, next) {
                         if (!valid) {
                             return res.status(401).json({ error: 'Mot de passe incorrect !' });
                         } else {
-                            res.status(200).json({
-                                userId: user._id,
-                                token: jwt.sign(
-                                    { userId: user._id },
-                                    process.env.RANDOM_TOKEN_SECRET,
-                                    { expiresIn: '24h' }
-                                )
-                            });
+                            req.session.userLogged = true;
+                            res.redirect("/");
                         }
                     })
-                    .catch(error => res.status(500).json({ error }));
-
-                req.session.userLogged = user._id;
-                res.redirect("/");
-
+                    .catch(error => {
+                        res.redirect("/login");
+                    });
             }
         })
-        .catch(error => res.status(500).json({ error }));
+        .catch(error => res.redirect("/login"));
 };
 
 
@@ -63,72 +55,18 @@ function getConnection(req, res) {
 function getHome(req, res) {
     if (!req.session.userLogged) {
         res.redirect("/login");
-        return;
     }
 
     else res.render("home");
 
 }
 
-async function logUser(req, res) {
-    if (req.session.userLogged) return;
-
-    const errors = [];
-    const email = req.body.email;
-    const password = req.body.password;
-
-    if (typeof email === "undefined" || email === "") {
-        errors.push("Le champ email est requis.");
-    }
-
-    if (typeof password === "undefined" || password === "") {
-        errors.push("Le champ mot de passe est requis.");
-    }
-
-    if (errors.length > 0) {
-        res.render("login", {
-            errors: errors,
-            email: email,
-        });
-        return;
-    }
-
-    const user = User.findOne({ email: email });
-
-    if (user == null && user?.length == 0) {
-        errors.push("Email ou mot de passe incorrect.");
-
-        res.render("login", {
-            errors: errors,
-            email: email,
-        });
-
-        return;
-    }
-
-    const comparaison = await bcrypt.compare(password, user?.password)
-
-    if (!comparaison) {
-        errors.push("Email ou mot de passe incorrect.");
-        res.render("login", {
-            errors: errors,
-            email: email,
-        });
-
-        return;
-    }
-
-    req.session.userLogged = user._id;
-
-    res.redirect("/");
-}
-
 function logoutUser(req, res) {
-    req.session.userLogged = null;
+    req.session.userLogged = false;
     res.redirect("/login")
 }
 
-module.exports = { getConnection, getHome, logUser, logoutUser, signup, login };
+module.exports = { getConnection, getHome, logoutUser, signup, login };
 
 
 
