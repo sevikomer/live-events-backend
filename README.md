@@ -85,6 +85,11 @@ live-events-backend/
 │   ├── user.js              # Routes pour les utilisateurs
 │   ├── venue.js             # Routes pour les lieux
 │
+├── test/                    # Test unitaires des Endpoints de l'API
+│   ├── eventApi.test.js     # Test des événements
+│   ├── informationApi.test.js   # Test des informations
+│   ├── venueApi.test.js     # Test des lieux
+│
 ├── views/                  # Définitions des vues
 │   ├── edit-events.ejs     # Vues permettant de modifier un évènement
 │   ├── edit-information.ejs # Vues permettant de modifier une information
