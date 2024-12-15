@@ -115,7 +115,9 @@ Liste des dépendances du projet :
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.4.1",
     "mongoose-unique-validator": "^5.0.0",
-    "multer": "^1.4.5-lts.1"
+    "multer": "^1.4.5-lts.1",
+     "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1"
   },
   
 
@@ -168,9 +170,12 @@ Base de données
 Si vous utilisez MongoDB pour stocker vos événements, assurez-vous d'installer et de configurer MongoDB sur votre machine locale ou d'utiliser une base de données distante (comme MongoDB Atlas). N'oubliez pas de mettre à jour le fichier .env pour inclure votre URI MongoDB.
 Exemple de fichier .env :
 MONGO_URI=mongodb://localhost:27017/gestion-evenements
-PORT=5000
+PORT=4200
 
-Déploiement
+Documentation Swagger pour l'API :
+http://localhost:4200/api-docs/
+
+Déploiement :
 L'API peut être déployée sur des services comme Heroku, DigitalOcean, AWS, ou Azure. Voici les étapes générales pour déployer votre API sur Heroku :
 
 Créez un compte sur Heroku si vous n'en avez pas déjà un.
