@@ -1,4 +1,6 @@
 const express = require('express');
+const swaggerJsdoc = require('swagger-jsdoc');
+const swaggerUi = require('swagger-ui-express');
 const bodyParser = require('body-parser');
 const session = require("cookie-session");
 const mongoose = require('mongoose');
@@ -23,6 +25,25 @@ mongoose
     .catch(() => console.log('Connexion à MongoDB échouée !'));
 
 const app = express();
+
+// Configuration de Swagger
+const swaggerOptions = {
+    definition: {
+        openapi: '3.0.0', // spécification OpenAPI 3.0
+        info: {
+            title: 'Live Events',
+            version: '1.0.0',
+            description: 'Une API pour gérer le festival',
+        },
+    },
+    apis: ['./routes/api/*.js'], // Chemin vers les fichiers de routes pour générer la documentation
+};
+
+// Créer la spécification Swagger
+const swaggerDocs = swaggerJsdoc(swaggerOptions);
+
+// Serve Swagger UI à l'URL /api-docs
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 
 app.use((req, res, next) => {
