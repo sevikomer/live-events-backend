@@ -44,6 +44,9 @@ yarn start
 L'API sera accessible à l'adresse suivante dans votre navigateur ou via des outils comme Postman :
 http://localhost:4200
 
+Pour effectuer des tests unitaires :
+npm test
+
 Structure du Projet
 Voici la structure de base de votre projet backend avec Express :
 live-events-backend/
