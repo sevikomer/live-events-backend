@@ -103,6 +103,22 @@ live-events-backend/
 ├── package.json             # Dépendances et scripts du projet
 └── README.md                # Ce fichier
 
+
+Liste des dépendances du projet :
+"dependencies": {
+    "bcrypt": "^5.1.1",
+    "cookie-session": "^2.1.0",
+    "crypto-js": "^4.2.0",
+    "dotenv": "^16.4.5",
+    "ejs": "^3.1.10",
+    "express": "^4.19.2",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.4.1",
+    "mongoose-unique-validator": "^5.0.0",
+    "multer": "^1.4.5-lts.1"
+  },
+  
+
 Routes de l'API :
 
 Pour le modèle Event:
