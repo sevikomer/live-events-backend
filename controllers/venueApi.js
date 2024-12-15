@@ -26,15 +26,29 @@ exports.modifyVenue = (req, res, next) => {
         lat: req.body.lat,
         lng: req.body.lng
     };
-    Venue.updateOne({ _id: req.params.id }, venue)
-        .then((venue) => { res.status(201).json(venue) })
-        .catch((error) => { res.status(400).json({ error: error }) });
+    Venue.findOneAndUpdate(
+        { _id: req.params.id },
+        venue,
+        { new: true } // Retourner le document mis à jour
+    )
+        .then((updatedVenue) => {
+            if (!updatedVenue) {
+                return res.status(404).json({ message: 'Venue not found' });
+            }
+            res.status(200).json(updatedVenue);  // Retourner le lieu mis à jour
+        })
+        .catch(error => res.status(401).json({ error }));
 };
 
 exports.deleteVenue = (req, res, next) => {
     Venue.deleteOne({ _id: req.params.id })
-        .then((venue) => { res.status(200).json(venue) })
-        .catch((error) => { res.status(400).json({ error: error }) });
+        .then(result => {
+            if (result.deletedCount === 0) {
+                return res.status(404).json({ message: 'Venue not found' });
+            }
+            res.status(200).send(`Venue with id ${req.params.id} deleted`);
+        })
+        .catch(error => res.status(400).json({ error }));
 };
 
 exports.getAllVenues = (req, res, next) => {

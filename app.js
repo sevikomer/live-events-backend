@@ -17,10 +17,7 @@ const userAPIRoutes = require('./routes/api/userApi');
 require("dotenv").config();
 
 mongoose
-    .connect(process.env.MONGO_CONNECTION, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true
-    })
+    .connect(process.env.MONGO_CONNECTION)
     .then(() => console.log('Connexion à MongoDB réussie !'))
     .catch(() => console.log('Connexion à MongoDB échouée !'));
 
